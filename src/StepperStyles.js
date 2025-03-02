@@ -1,29 +1,32 @@
 // StepperStyles.js
 import { styled } from '@mui/system';
-import { StepConnector, StepLabel } from '@mui/material';
+import Box from '@mui/material/Box';
 
 export const steps = [
-    { label: 'Вхід', description: 'Увійдіть в особистий кабінет або зареєструйтесь.' },
-    { label: 'Вибір товару', description: 'Виберіть товари, які бажаєте придбати.' },
-    { label: 'Кошик', description: 'Перегляньте та відредагуйте ваше замовлення.' },
-    { label: 'Оплата', description: 'Оберіть спосіб оплати та здійсніть платіж.' },
-    { label: 'Доставка', description: 'Вкажіть адресу доставки та оберіть спосіб доставки.' },
+    { label: 'Нова', description: 'Заявка створена' },
+    { label: 'В обробці', description: 'Заявка розглядається' },
+    { label: 'Підтверджена', description: 'Заявка підтверджена' },
+    { label: 'Виконується', description: 'Заявка в процесі виконання' },
+    { label: 'Завершена', description: 'Заявка успішно виконана' },
 ];
 
 // Загальний контейнер для всіх степперів
-export const StepperContainer = styled('div')({
+export const StepperContainer = styled(Box)(({ theme }) => ({
     width: '100%',
-    maxWidth: '800px', // Обмеження максимальної ширини
-    margin: '0 auto',  // Центрування
-    padding: '20px',
-});
+    maxWidth: '1000px',
+    margin: '0 auto',
+    padding: '8px 16px',
+    backgroundColor: theme.palette.background.paper,
+    marginBottom: 16
+}));
 
-// Функція для анімації збільшення
+// Функція для анімації збільшення (зберігаємо для сумісності)
 export const getScaleAnimation = (theme, activeStep, index) => ({
-    transition: theme.transitions.create(['transform'], {
+    transition: theme.transitions.create(['transform', 'color'], {
         duration: theme.transitions.duration.shortest,
     }),
     ...(activeStep === index && {
-        transform: 'scale(1.2)',
+        transform: 'scale(1.1)',
+        fontWeight: 'bold'
     }),
 });

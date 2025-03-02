@@ -1,100 +1,73 @@
-// App.js
-import React from 'react';
-import CircleStepper from './CircleStepper';
-import LineStepper from './LineStepper';
-import OvalStepper from './OvalStepper';
-import FlipSquareStepper from './FlipSquareStepper';
-import MyCustomStepper from './MyCustomStepper';
-import { StepperContainer, steps } from './StepperStyles'; // Імпортуємо StepperContainer і steps
-import { useState } from 'react';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
+import RectangleStepper from './RectangleStepper'; // Використовуємо новий компонент
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 function App() {
-    const [activeStep, setActiveStep] = useState(0);
+    const [activeStep, setActiveStep] = useState(0); // Початковий крок "Нова"
+    const [isClickable, setIsClickable] = useState(true);
 
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    // Обробка кліків по крокам
+    const handleStepClick = (step) => {
+        // Завжди дозволяємо перехід на будь-який крок, якщо isClickable=true
+        if (isClickable) {
+            setActiveStep(step);
+            console.log("Крок змінено на:", step); // Для відладки
+        }
     };
 
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    // Перемикач режиму
+    const toggleClickable = () => {
+        setIsClickable(!isClickable);
     };
 
-    const handleReset = () => { // Додаємо функцію скидання
-        setActiveStep(0);
-    };
+    const steps = [
+        { label: 'Нова', description: 'Заявка створена' },
+        { label: 'В обробці', description: 'Заявка розглядається' },
+        { label: 'Підтверджена', description: 'Заявка підтверджена' },
+        { label: 'Виконується', description: 'Заявка в процесі виконання' },
+        { label: 'Завершена', description: 'Заявка успішно виконана' },
+    ];
 
     return (
         <div>
-            <Typography variant="h4" align="center" gutterBottom>
-                Варіанти степперів
-            </Typography>
+            <Box sx={{ bgcolor: '#f5f5f5', py: 1, px: 2, mb: 2 }}>
+                <Typography variant="subtitle1">CRM Система / Заявки / Заявка #1234</Typography>
+            </Box>
 
-            <StepperContainer>
-                <Typography variant="h5">Степпер з кругами</Typography>
-                <CircleStepper activeStep={activeStep} handleNext={handleNext} handleBack={handleBack} />
-                {activeStep === steps.length && (
-                    <Button onClick={handleReset} variant="contained" color="primary">
-                        Скинути
-                    </Button>
-                )}
-            </StepperContainer>
+            <RectangleStepper
+                activeStep={activeStep}
+                handleStepClick={handleStepClick}
+                isClickable={isClickable}
+            />
 
-            <StepperContainer>
-                <Typography variant="h5">Степпер з лініями</Typography>
-                <LineStepper activeStep={activeStep} handleNext={handleNext} handleBack={handleBack} />
-                {activeStep === steps.length && (
-                    <Button onClick={handleReset} variant="contained" color="primary">
-                        Скинути
-                    </Button>
-                )}
-            </StepperContainer>
+            <Box sx={{ p: 3, borderTop: '1px solid #e0e0e0' }}>
+                <Typography variant="h5" gutterBottom>
+                    Заявка №1234 - {steps[activeStep].label}
+                </Typography>
 
-            <StepperContainer>
-                <Typography variant="h5">Степпер з овалами</Typography>
-                <OvalStepper activeStep={activeStep} handleNext={handleNext} handleBack={handleBack} />
-                {activeStep === steps.length && (
-                    <Button onClick={handleReset} variant="contained" color="primary">
-                        Скинути
-                    </Button>
-                )}
-            </StepperContainer>
+                <Box sx={{ mb: 3 }}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={isClickable}
+                                onChange={toggleClickable}
+                                name="clickable"
+                                color="primary"
+                            />
+                        }
+                        label="Дозволити ручну зміну статусу"
+                    />
+                </Box>
 
-            <StepperContainer>
-                <Typography variant="h5">Степпер з перекидними квадратами</Typography>
-                <FlipSquareStepper activeStep={activeStep} handleNext={handleNext} handleBack={handleBack} />
-                {activeStep === steps.length && (
-                    <Button onClick={handleReset} variant="contained" color="primary">
-                        Скинути
-                    </Button>
-                )}
-            </StepperContainer>
-
-            <StepperContainer>
-                <Typography variant="h5">Мій кастомний степпер</Typography>
-                <MyCustomStepper activeStep={activeStep} handleNext={handleNext} handleBack={handleBack} />
-                {activeStep === steps.length && (
-                    <Button onClick={handleReset} variant="contained" color="primary">
-                        Скинути
-                    </Button>
-                )}
-            </StepperContainer>
-
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, justifyContent: 'center' }}>
-                <Button
-                    color="inherit"
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{ mr: 1 }}
-                >
-                    Назад
-                </Button>
-                <Box sx={{ flex: '1 1 auto' }} />
-                <Button onClick={handleNext} variant="contained">
-                    {activeStep === steps.length - 1 ? 'Завершити' : 'Вперед'}
-                </Button>
+                <Typography paragraph>
+                    Поточний статус: <strong>{steps[activeStep].label}</strong>
+                </Typography>
+                <Typography paragraph>
+                    {steps[activeStep].description}
+                </Typography>
             </Box>
         </div>
     );
